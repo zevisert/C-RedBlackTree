@@ -7,7 +7,7 @@
 
 #define MAX(a,b) (a > b) ? a : b
 
-#define ASSERTS
+//#define ASSERTS
 
 #ifdef ASSERTS
 #include <assert.h>
