@@ -45,7 +45,7 @@ Node* CreateNode(Key _key, Value _val, bool _color, int _size)
 	Node* node = calloc(1, sizeof(Node));
 	memset(node, 0, sizeof(Node));
 	Node stackNode = { .key = _key, .val = _val, .color = _color, .size = _size, .left = NULL, .right = NULL };
-	
+
 	applyKeyVal(&stackNode, _key, _val);
 
 	memcpy(node, &stackNode, sizeof(Node));
@@ -101,13 +101,13 @@ const Node* RBT_max_bykey(const RedBlackBST* self)
 void RBT_deleteMax(RedBlackBST* self)
 {
 	if (RBT_isEmpty(self)) { printf("BST underflow"); exit(EXIT_FAILURE); }
-	
+
 	// if both children of root are black, set root to red
 	if (!NODE_isRed(self->root->left) && !NODE_isRed(self->root->right))
 	{
 		self->root->color = RED;
 	}
-	
+
 	self->root = NODE_deleteMax(self->root);
 	if (!RBT_isEmpty(self)) self->root->color = BLACK;
 	assert(RBT_self_check(self));
@@ -119,13 +119,13 @@ void RBT_remove(RedBlackBST* self, Key key)
 {
 	if (key == NULL) { printf("argument to remove() is NULL"); exit(EXIT_FAILURE); }
 	if (!RBT_contains(self, key)) return;
-	
+
 	/* if both children of root are black, set root to red */
 	if (!NODE_isRed(self->root->left) && !NODE_isRed(self->root->right))
 	{
 		self->root->color = RED;
 	}
-	
+
 	self->root = NODE_remove(self->root, key);
 	if (!RBT_isEmpty(self)) self->root->color = BLACK;
 	assert(RBT_self_check(self));
@@ -202,7 +202,7 @@ Key RBT_select(const RedBlackBST* self, int k)
 	Node* x = NODE_select(self->root, k);
 	return x->key;
 }
-	
+
 /* Return the number of keys in the symbol table strictly less than {key}. */
 int RBT_rank(const RedBlackBST* self, Key key)
 {
@@ -220,7 +220,7 @@ KeyList* RBT_keys_range(const RedBlackBST* self, const Key lo, const Key hi)
 {
 	if (lo == NULL) { printf("first argument to keys() is NULL"); exit(EXIT_FAILURE); }
 	if (hi == NULL) { printf("second argument to keys() is NULL"); exit(EXIT_FAILURE); }
-	
+
 	KeyList* list = (KeyList*)calloc(1, sizeof(KeyList));
 	KeyList* end = list;
 
@@ -258,7 +258,7 @@ bool RBT_free(RedBlackBST* self)
 
 		free(release->node->val);
 		release->node->val = NULL;
-		
+
 		free(release->node);
 		release->node->left = NULL;
 		release->node->right = NULL;
@@ -358,7 +358,7 @@ bool RBT_self_check(const RedBlackBST* self)
 	if (!(t3 = RBT_test_isRankConsistent(self))) fprintf(stdout, "Ranks not consistent\n");
 	if (!(t4 = RBT_test_is23(self)))             fprintf(stdout, "Not a 2-3 tree\n");
 	if (!(t5 = RBT_test_isBalanced(self)))       fprintf(stdout, "Not balanced\n");
-	
+
 	return t1 && t2 && t3 && t4 && t5;
 }
 
