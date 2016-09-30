@@ -258,7 +258,7 @@ Node* NODE_put(Node* h, Key key, Value val)
 	else
 	{
 		// Replace the key with a new value
-		memcpy(&h->val, val, sizeof(Value));
+		memcpy(h->val, val, sizeof(Value));
 	}
 
 	// fix-up any right-leaning links
