@@ -142,7 +142,7 @@ Node* NODE_moveRedRight(Node* h)
 Node* NODE_balance(Node* h)
 {
 	assert(h != NULL);
-	
+
 	if (NODE_isRed(h->right))
 	{
 		h = NODE_rotateLeft(h);
@@ -156,11 +156,11 @@ Node* NODE_balance(Node* h)
 	{
 		NODE_flipColors(h);
 	}
-	
+
 	h->size = NODE_size(h->left) + NODE_size(h->right) + 1;
 	return h;
 }
-	
+
 // delete the key-value pair with the minimum key rooted at h
 Node* NODE_deleteMin(Node* h)
 {
@@ -184,18 +184,18 @@ Node* NODE_deleteMax(Node* h)
 {
 	if (NODE_isRed(h->left))
 		h = NODE_rotateRight(h);
-	
+
 	if (h->right == NULL)
 	{
 		NODE_free(&h);
 		return NULL;
 	}
-	
+
 	if (!NODE_isRed(h->right) && !NODE_isRed(h->right->left))
 		h = NODE_moveRedRight(h);
-	
+
 	h->right = NODE_deleteMax(h->right);
-	
+
 	return NODE_balance(h);
 }
 
@@ -213,7 +213,7 @@ Node* NODE_remove(Node* h, Key key)
 	else
 	{
 		if (NODE_isRed(h->left))
-		{			
+		{
 			h = NODE_rotateRight(h);
 		}
 		if (key == h->key && (h->right == NULL))
@@ -229,7 +229,7 @@ Node* NODE_remove(Node* h, Key key)
 		{
 			Node* x = NODE_min_bykey(h->right);
 			h->key = x->key;
-			
+
 			// x will be freed in a moment: make sure it's data is freed
 			Value temp = h->val;
 			h->val = x->val;
@@ -258,12 +258,12 @@ Node* NODE_put(Node* h, Key key, Value val)
 	else
 	{
 		// Replace the key with a new value
-		memcpy(&h->val, val, sizeof(Value));
+		memcpy(h->val, val, sizeof(Value));
 	}
-		
+
 	// fix-up any right-leaning links
 	if (NODE_isRed(h->right) && !NODE_isRed(h->left))
-	{			
+	{
 		h = NODE_rotateLeft(h);
 	}
 	if (NODE_isRed(h->left) && NODE_isRed(h->left->left))
@@ -271,7 +271,7 @@ Node* NODE_put(Node* h, Key key, Value val)
 		h = NODE_rotateRight(h);
 	}
 	if (NODE_isRed(h->left) && NODE_isRed(h->right))
-	{			
+	{
 		NODE_flipColors(h);
 	}
 
