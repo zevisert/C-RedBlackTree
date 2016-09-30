@@ -14,6 +14,16 @@
 
 #pragma region Private NODE_* functions
 
+// Release any memory associated with this node
+void NODE_free(Node** x)
+{
+	free((*x)->val);
+	(*x)->val = NULL;
+
+	free((*x));
+	(*x) = NULL;
+}
+
 bool NODE_isRed(const Node* x)
 {
 	if (x == NULL) return false;
@@ -154,7 +164,11 @@ Node* NODE_balance(Node* h)
 // delete the key-value pair with the minimum key rooted at h
 Node* NODE_deleteMin(Node* h)
 {
-	if (h->left == NULL) return NULL;
+	if (h->left == NULL)
+	{
+		NODE_free(&h);
+		return h;
+	}
 
 	if (!NODE_isRed(h->left) && !NODE_isRed(h->left->left))
 	{
@@ -172,7 +186,10 @@ Node* NODE_deleteMax(Node* h)
 		h = NODE_rotateRight(h);
 	
 	if (h->right == NULL)
+	{
+		NODE_free(&h);
 		return NULL;
+	}
 	
 	if (!NODE_isRed(h->right) && !NODE_isRed(h->right->left))
 		h = NODE_moveRedRight(h);
@@ -201,6 +218,7 @@ Node* NODE_remove(Node* h, Key key)
 		}
 		if (key == h->key && (h->right == NULL))
 		{
+			NODE_free(&h);
 			return NULL;
 		}
 		if (!NODE_isRed(h->right) && !NODE_isRed(h->right->left))
@@ -209,9 +227,14 @@ Node* NODE_remove(Node* h, Key key)
 		}
 		if (key == h->key)
 		{
-			const Node* x = NODE_min_bykey(h->right);
+			Node* x = NODE_min_bykey(h->right);
 			h->key = x->key;
+			
+			// x will be freed in a moment: make sure it's data is freed
+			Value temp = h->val;
 			h->val = x->val;
+			x->val = temp;
+
 			h->right = NODE_deleteMin(h->right);
 		}
 		else h->right = NODE_remove(h->right, key);
